@@ -26,6 +26,8 @@ namespace WINFORM_TallestBuildings
             InitializeComponent();
 
 
+            //Adatbázis Kapcsolat és adatbetöltés
+            //Beállítjuk az adatbázis kapcsolatot, és lekérdezzük az adatokat, amelyeket egy DataGridView komponensben jelenítünk meg.
             string connectionString;
             string sqlParancs;
 
@@ -38,15 +40,20 @@ namespace WINFORM_TallestBuildings
 
             MySqlDataAdapter adapter = new MySqlDataAdapter(sqlParancs, connection);
 
-            DataSet ds = new DataSet();
 
+            //DataSet: Egy adatstruktúra, amely adatokat tartalmazó táblák gyűjteményét tárolja.
+            //Ez egy memóriában lévő adatbázis, amely több táblát és azok közötti kapcsolatokat is képes tárolni.
+            DataSet ds = new DataSet();
             adapter.Fill(ds);
 
+            //Adatok Kötése a DataGridView-hez:
+            //A BindingSource segítségével az adatokat hozzárendeljük a DataGridView-hez.
             BindingSource bs = new BindingSource();
             bs.DataSource = ds.Tables[0];
             dataGridView1.DataSource = bs;
 
-            connection.Close();
+            //nem kell lezárni
+            //connection.Close();
         }
 
         private void button_orszag_Click(object sender, EventArgs e)
@@ -54,6 +61,8 @@ namespace WINFORM_TallestBuildings
             string adat = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
             string sqlParancs = "SELECT city FROM buildings WHERE building_name ='" + adat + "';";
             MySqlCommand sqlCommand = new MySqlCommand(sqlParancs, connection);
+
+            //Lekérdezés végrehajtása: ExecuteScalar() segítségével végrehajtjuk a lekérdezést és az eredményt megjelenítjük egy címkén (label1).
             string varos = sqlCommand.ExecuteScalar().ToString();
             label1.Text = "Ország: " + varos;
         }
